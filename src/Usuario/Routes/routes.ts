@@ -1,4 +1,4 @@
-import {UsuarioController} from "./../Controllers/UsuarioController";
+import {UsuarioController} from "../Controllers/UsuarioController";
 
 export const Routes = [{
     method: "get",
