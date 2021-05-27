@@ -1,0 +1,23 @@
+{
+   "name": "Gyan",
+   "version": "0.0.1",
+   "description": "Awesome project developed with TypeORM.",
+   "devDependencies": {
+      "ts-node": "3.3.0",
+      "@types/node": "^8.0.29",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "@types/dotenv": "^8.2.0",
+      "body-parser": "^1.18.1",
+      "dotenv": "^10.0.0",
+      "express": "^4.15.4",
+      "glob": "^7.1.7",
+      "mysql": "^2.14.1",
+      "reflect-metadata": "^0.1.10",
+      "typeorm": "0.2.32"
+   },
+   "scripts": {
+      "start": "ts-node src/index.ts"
+   }
+}
