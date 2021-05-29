@@ -18,27 +18,27 @@ class WriterAMCLI{
     writeDefaultController(){
         const data:String =`import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
-import {${this.type}} from "../Entities/${this.type}";
+import {${this.name}} from "../Entities/${this.name}";
 
-export class ${this.type}Controller {
+export class ${this.file_name} {
 
-    private ${this.module.toLowerCase()}Repository = getRepository(${this.module});
+    private ${this.name.toLowerCase()}Repository = getRepository(${this.name});
 
     async all(request: Request, response: Response, next: NextFunction) {
-        return this.${this.module.toLowerCase()}Repository.find();
+        return this.${this.name.toLowerCase()}Repository.find();
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        return this.${this.module.toLowerCase()}Repository.findOne(request.params.id);
+        return this.${this.name.toLowerCase()}Repository.findOne(request.params.id);
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        return this.${this.module.toLowerCase()}Repository.save(request.body);
+        return this.${this.name.toLowerCase()}Repository.save(request.body);
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        let ${this.module.toLowerCase()}ToRemove = await this.${this.module.toLowerCase()}Repository.findOne(request.params.id);
-        await this.${this.module.toLowerCase()}Repository.remove(${this.module.toLowerCase()}ToRemove);
+        let ${this.name.toLowerCase()}ToRemove = await this.${this.name.toLowerCase()}Repository.findOne(request.params.id);
+        await this.${this.name.toLowerCase()}Repository.remove(${this.name.toLowerCase()}ToRemove);
     }
 
 }`;
@@ -46,27 +46,27 @@ export class ${this.type}Controller {
     }
 
     writeDefaultRoute (){
-        const data:String = `import {${this.module}Controller} from "../Controllers/${this.module}Controller";
+        const data:String = `import {${this.file_name}} from "../Controllers/${this.file_name}";
 
 export const Routes = [{
     method: "get",
-    route: "/${this.routeURL}",
-    controller: ${this.module}Controller,
+    route: "/${this.route}",
+    controller: ${this.file_name},
     action: "all"
 }, {
     method: "get",
-    route: "/${this.routeURL}/:id",
-    controller: ${this.module}Controller,
+    route: "/${this.route}/:id",
+    controller: ${this.file_name},
     action: "one"
 }, {
     method: "post",
-    route: "/${this.routeURL}",
-    controller: ${this.module}Controller,
+    route: "/${this.route}",
+    controller: ${this.file_name},
     action: "save"
 }, {
     method: "delete",
-    route: "/${this.routeURL}/:id",
-    controller: ${this.module}Controller,
+    route: "/${this.route}/:id",
+    controller: ${this.file_name},
     action: "remove"
 }];`
         return data;
@@ -76,7 +76,7 @@ export const Routes = [{
         const data:String = `import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 
 @Entity()
-export class ${this.module} {
+export class ${this.name} {
 
     @PrimaryGeneratedColumn()
     id: number;

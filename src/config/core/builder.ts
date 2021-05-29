@@ -23,7 +23,7 @@ class BuilderAMCLI extends WriterAMCLI{
     init(){
         let response:InitResponse = {color:'green', message:'', result: true};
         const modules_filter = ['Module', 'Controller', 'Entity', 'Route'];
-        
+
         if(modules_filter.includes(this.type)){
             this[`create${this.type}`]();
             response.message = `${this.type} criado com sucesso!`;
@@ -37,9 +37,10 @@ class BuilderAMCLI extends WriterAMCLI{
 
     private createController(){
         const controller_pathname = `${this.pathname}/Controllers`;
+        this.file_name = `${this.file_name}${!this.file_name.includes('Controller') ?'Controller':''}`;
         try {
             fs.existsSync(controller_pathname) && 
-            fs.writeFile(`${controller_pathname}/${this.file_name}${!this.file_name.includes('Controller') ?'Controller':''}.ts`, 
+            fs.writeFile(`${controller_pathname}/${this.file_name}.ts`, 
                         this.writeDefaultController(),
                         err =>{ return !err });
             return true;
@@ -69,7 +70,7 @@ class BuilderAMCLI extends WriterAMCLI{
             fs.existsSync(entity_pathname) && 
             fs.writeFile(`${entity_pathname}/${this.file_name}.ts`, 
                         this.writeDefaultEntity(), 
-                        err =>{ return !err });
+                        err =>{ return !err});
             return true;    
        } catch (error) {
         return false;    
@@ -78,10 +79,12 @@ class BuilderAMCLI extends WriterAMCLI{
     }
     private createModule(){
         try {
+
             !fs.existsSync(this.pathname) && 
             fs.mkdir(this.pathname, err =>{
+
                 if(this.createModuleFolders()){
-                    this.createEntity();
+                    this.createEntity()
                     this.createController();
                     this.createRoute();
                 }
@@ -92,7 +95,7 @@ class BuilderAMCLI extends WriterAMCLI{
         }
         
     }
-    private createModuleFolders(){
+    private async createModuleFolders(){
         if(fs.existsSync(this.pathname)){
             fs.mkdir(`${this.pathname}/Controllers`, err =>{if(err)return false});
             fs.mkdir(`${this.pathname}/Entities`, err =>{if(err)return false});
