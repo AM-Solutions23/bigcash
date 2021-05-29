@@ -8,7 +8,9 @@ class BuilderAMCLI extends WriterAMCLI{
     protected type:string;
     protected entity_options:Array<string>;
     protected pathname:string;
-    protected file_name:string;
+    protected entity:string;
+    protected controller:string;
+    protected route_file:string;
 
     constructor(args:any){
         super(args);
@@ -16,7 +18,9 @@ class BuilderAMCLI extends WriterAMCLI{
         this.type = args['type'];
         this.name = args['name'];
         this.route = args['route'];
-        this.file_name = args['file_name'] || args['name'];
+        this.entity = args['entity'];
+        this.controller = args['controller'];
+        this.route_file = args['route_file'];
         this.entity_options = args['entity_options'];
         this.pathname = `${__dirname}/../../${this.name}`;
     }
@@ -37,13 +41,14 @@ class BuilderAMCLI extends WriterAMCLI{
 
     private createController(){
         const controller_pathname = `${this.pathname}/Controllers`;
-        this.file_name = `${this.file_name}${!this.file_name.includes('Controller') ?'Controller':''}`;
+        this.controller = `${this.controller}${!this.controller.includes('Controller') ?'Controller':''}`;
         try {
             fs.existsSync(controller_pathname) && 
-            fs.writeFile(`${controller_pathname}/${this.file_name}.ts`, 
+            fs.writeFile(`${controller_pathname}/${this.controller}.ts`, 
                         this.writeDefaultController(),
                         err =>{ return !err });
-            return true;
+            if(!fs.existsSync(`${controller_pathname}/${this.controller}.ts`)) this.createController();
+            else return true;
         } catch (error) {
             return false;
         }
@@ -51,16 +56,16 @@ class BuilderAMCLI extends WriterAMCLI{
     }
     private createRoute(){
         const route_pathname = `${this.pathname}/Routes`;
-        this.file_name = this.type == 'module' ? 'Routes' : this.file_name;
         try {
             fs.existsSync(route_pathname) && 
-            fs.writeFile(`${route_pathname}/${this.file_name}.ts`, 
+            fs.writeFile(`${route_pathname}/${this.route_file}.ts`, 
                         this.writeDefaultRoute(), 
                         err =>{ return !err });
-            return true;
+            if(!fs.existsSync(`${route_pathname}/${this.route_file}.ts`))this.createRoute();
+            else return true;
+        
         } catch (error) {
             return false;
-            
         }
 
     }
@@ -68,10 +73,11 @@ class BuilderAMCLI extends WriterAMCLI{
         const entity_pathname = `${this.pathname}/Entities`;
        try {
             fs.existsSync(entity_pathname) && 
-            fs.writeFile(`${entity_pathname}/${this.file_name}.ts`, 
+            fs.writeFile(`${entity_pathname}/${this.entity}.ts`, 
                         this.writeDefaultEntity(), 
                         err =>{ return !err});
-            return true;    
+            if(!fs.existsSync(entity_pathname)) this.createEntity();
+            else return true;    
        } catch (error) {
         return false;    
        } 
@@ -84,9 +90,9 @@ class BuilderAMCLI extends WriterAMCLI{
             fs.mkdir(this.pathname, err =>{
 
                 if(this.createModuleFolders()){
-                    this.createEntity()
                     this.createController();
                     this.createRoute();
+                    this.createEntity();
                 }
             });
             return true;

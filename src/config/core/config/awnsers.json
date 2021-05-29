@@ -1,0 +1,41 @@
+[{
+    "type": "list",
+    "name": "type",
+    "message": "Selecione o tipo:",
+    "choices":"Module,Controller,Route,Entity"
+},
+{
+  "type": "input",
+  "name": "name",
+  "message": "Selecione o nome da pasta do módulo desejado:"
+},
+{
+  "type": "input",
+  "name": "route",
+  "message": "Selecione o prefixo da rota:",
+  "when": "(resps)=>{return HelperAMCLI.validateQuestions(resps,'route')}"
+},
+{
+  "type": "input",
+  "name": "route_file",
+  "message": "Selecione o nome do seu arquivo de rotas:",
+  "when": "(resps)=>{return HelperAMCLI.validateQuestions(resps, 'route_file')}"
+},
+{
+  "type": "input",
+  "name": "controller",
+  "message": "Selecione o nome da sua controller:",
+  "when": "(resps)=>{return HelperAMCLI.validateQuestions(resps, 'controller')}"
+},
+{
+  "type": "input",
+  "name": "entity",
+  "message": "Selecione o nome da sua entidade:",
+  "when": "(resps)=>{return HelperAMCLI.validateQuestions(resps, 'entity')}"
+},
+{
+  "type": "input",
+  "name": "entity_options",
+  "message": "Selecione os campos do banco: (ex.: col1:string,col2:number)",
+  "when": "(resps)=>{return HelperAMCLI.validateQuestions(resps, 'entity_options')}"
+}]

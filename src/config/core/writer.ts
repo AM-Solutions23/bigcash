@@ -4,13 +4,15 @@ class WriterAMCLI{
     protected type:string;
     protected entity_options:Array<string>;
     protected pathname:string;
-    protected file_name:string;
+    protected entity:string;
+    protected controller:string;
 
     constructor(args:any){
         this.type = args['type'];
         this.name = args['name'];
         this.route = args['route'];
-        this.file_name = args['file_name'] || args['name'];
+        this.entity = args['entity'];
+        this.controller = args['controller'];
         this.entity_options = args['entity_options'];
         this.pathname = `${__dirname}/../../${this.name}`;
     }
@@ -18,27 +20,27 @@ class WriterAMCLI{
     writeDefaultController(){
         const data:String =`import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
-import {${this.name}} from "../Entities/${this.name}";
+import {${this.entity}} from "../Entities/${this.entity}";
 
-export class ${this.file_name} {
+export class ${this.controller} {
 
-    private ${this.name.toLowerCase()}Repository = getRepository(${this.name});
+    private ${this.controller.toLowerCase()}Repository = getRepository(${this.controller});
 
     async all(request: Request, response: Response, next: NextFunction) {
-        return this.${this.name.toLowerCase()}Repository.find();
+        return this.${this.controller.toLowerCase()}Repository.find();
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        return this.${this.name.toLowerCase()}Repository.findOne(request.params.id);
+        return this.${this.controller.toLowerCase()}Repository.findOne(request.params.id);
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        return this.${this.name.toLowerCase()}Repository.save(request.body);
+        return this.${this.controller.toLowerCase()}Repository.save(request.body);
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        let ${this.name.toLowerCase()}ToRemove = await this.${this.name.toLowerCase()}Repository.findOne(request.params.id);
-        await this.${this.name.toLowerCase()}Repository.remove(${this.name.toLowerCase()}ToRemove);
+        let ${this.controller.toLowerCase()}ToRemove = await this.${this.controller.toLowerCase()}Repository.findOne(request.params.id);
+        await this.${this.controller.toLowerCase()}Repository.remove(${this.controller.toLowerCase()}ToRemove);
     }
 
 }`;
@@ -46,27 +48,27 @@ export class ${this.file_name} {
     }
 
     writeDefaultRoute (){
-        const data:String = `import {${this.file_name}} from "../Controllers/${this.file_name}";
+        const data:String = `import {${this.controller}} from "../Controllers/${this.controller}";
 
 export const Routes = [{
     method: "get",
     route: "/${this.route}",
-    controller: ${this.file_name},
+    controller: ${this.controller},
     action: "all"
 }, {
     method: "get",
     route: "/${this.route}/:id",
-    controller: ${this.file_name},
+    controller: ${this.controller},
     action: "one"
 }, {
     method: "post",
     route: "/${this.route}",
-    controller: ${this.file_name},
+    controller: ${this.controller},
     action: "save"
 }, {
     method: "delete",
     route: "/${this.route}/:id",
-    controller: ${this.file_name},
+    controller: ${this.controller},
     action: "remove"
 }];`
         return data;
@@ -76,7 +78,7 @@ export const Routes = [{
         const data:String = `import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 
 @Entity()
-export class ${this.name} {
+export class ${this.entity} {
 
     @PrimaryGeneratedColumn()
     id: number;
