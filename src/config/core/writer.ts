@@ -1,18 +1,26 @@
-class DefaultFiles{
-    private module:string
-    private routeURL:string
+class WriterAMCLI{
+    protected name:string;
+    protected route:string;
+    protected type:string;
+    protected entity_options:Array<string>;
+    protected pathname:string;
+    protected file_name:string;
 
-    constructor(module:string, routeURL:string){
-        this.module = module;
-        this.routeURL = routeURL;
+    constructor(args:any){
+        this.type = args['type'];
+        this.name = args['name'];
+        this.route = args['route'];
+        this.file_name = args['file_name'] || args['name'];
+        this.entity_options = args['entity_options'];
+        this.pathname = `${__dirname}/../../${this.name}`;
     }
 
     writeDefaultController(){
         const data:String =`import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
-import {${this.module}} from "../Entities/${this.module}";
+import {${this.type}} from "../Entities/${this.type}";
 
-export class ${this.module}Controller {
+export class ${this.type}Controller {
 
     private ${this.module.toLowerCase()}Repository = getRepository(${this.module});
 
@@ -84,4 +92,4 @@ export class ${this.module} {
     }
 }
 
-export default DefaultFiles;
+export default WriterAMCLI;
