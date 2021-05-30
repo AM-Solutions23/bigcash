@@ -1,4 +1,4 @@
-class WriterAMCLI{
+class WriterAEMCLI{
     protected name:string;
     protected route:string;
     protected type:string;
@@ -14,7 +14,7 @@ class WriterAMCLI{
         this.entity = args['entity'];
         this.controller = args['controller'];
         this.entity_options = args['entity_options'];
-        this.pathname = `${__dirname}/../../${this.name}`;
+        this.pathname = `${__dirname}/../../modules/${this.name}`;
     }
 
     writeDefaultController(){
@@ -92,6 +92,27 @@ export class ${this.entity} {
 } `;
         return data;
     }
+    writeDefaultMiddleware(){
+        const auth_settings = {
+            imports:`import * as jwt form 'jsonwebtoken'
+        import UsuarioController from './../Usuario/Controllers/UsuarioController'
+        import PermissaoController from './../Usuario/Permissao/PermissaoController'
+            `,
+            body:``
+        }
+        const data:String = `import express from 'express';
+
+        const ValidateUsuarios = (
+            req: express.Request,
+            res: express.Response,
+            next: express.NextFunction
+        ) =>{
+             // do stuff here
+        }
+        
+        
+        export default ValidateUsuarios;`;
+    }
 }
 
-export default WriterAMCLI;
+export default WriterAEMCLI;

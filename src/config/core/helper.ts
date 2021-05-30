@@ -1,6 +1,6 @@
 import * as inquirer from 'inquirer';
 
-class HelperAMCLI{
+class HelperAEMCLI{
     public static async validateQuestions(resps:Array<any>, actual_question:string){
         let response:boolean = false;
         
@@ -26,12 +26,5 @@ class HelperAMCLI{
     public static capitalizeString(str:string){
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
-    public static buildAwnserConfig(json_){
-        json_.forEach(awnser_obj => {
-            if(awnser_obj.when) awnser_obj.when = eval(awnser_obj.when);
-            if(awnser_obj.choices) awnser_obj.choices = awnser_obj.choices.split(',');
-        });
-        return json_;
-    }
 }
-export default HelperAMCLI;
+export default HelperAEMCLI;

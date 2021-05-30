@@ -1,8 +1,8 @@
 import * as fs from 'fs';
-import WriterAMCLI from './writer';
+import WriterAEMCLI from './writer';
 import {InitResponse} from './interfaces/builder_interfaces'
 
-class BuilderAMCLI extends WriterAMCLI{
+class BuilderAEMCLI extends WriterAEMCLI{
     protected name:string;
     protected route:string;
     protected type:string;
@@ -10,7 +10,9 @@ class BuilderAMCLI extends WriterAMCLI{
     protected pathname:string;
     protected entity:string;
     protected controller:string;
+    protected middleware:string;
     protected route_file:string;
+    protected middleware_file:string;
 
     constructor(args:any){
         super(args);
@@ -20,11 +22,16 @@ class BuilderAMCLI extends WriterAMCLI{
         this.route = args['route'];
         this.entity = args['entity'];
         this.controller = args['controller'];
+        this.middleware = args['controller'];
         this.route_file = args['route_file'];
+        this.middleware_file = args['route_file'];
         this.entity_options = args['entity_options'];
-        this.pathname = `${__dirname}/../../${this.name}`;
+        this.pathname = `${__dirname}/../../modules/${this.name}`;
     }
     init(){
+        !fs.existsSync(`${__dirname}/../../modules/`) && 
+        fs.mkdir(`${__dirname}/../../modules/`, err =>{if(err)return false});
+
         let response:InitResponse = {color:'green', message:'', result: true};
         const modules_filter = ['Module', 'Controller', 'Entity', 'Route'];
 
@@ -101,7 +108,10 @@ class BuilderAMCLI extends WriterAMCLI{
         }
         
     }
-    private async createModuleFolders(){
+    private createMiddleware(){
+
+    }
+    private createModuleFolders(){
         if(fs.existsSync(this.pathname)){
             fs.mkdir(`${this.pathname}/Controllers`, err =>{if(err)return false});
             fs.mkdir(`${this.pathname}/Entities`, err =>{if(err)return false});
@@ -109,6 +119,9 @@ class BuilderAMCLI extends WriterAMCLI{
         }
         return true;
     }
+    private createAuth(){
+
+    }
 }
 
-export default BuilderAMCLI;
+export default BuilderAEMCLI;
