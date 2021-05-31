@@ -23,6 +23,7 @@
    },
    "scripts": {
       "start": "ts-node src/index.ts",
-      "aemcli:generate": "ts-node src/config/core/index.ts"
+      "aemcli:generate": "ts-node src/config/core/index.ts",
+      "build": "tsc --build"
    }
 }

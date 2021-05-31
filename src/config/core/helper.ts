@@ -1,26 +1,18 @@
-import * as inquirer from 'inquirer';
-
 class HelperAEMCLI{
     public static async validateQuestions(resps:Array<any>, actual_question:string){
         let response:boolean = false;
+        const handler_validator = {
+            name_validator: ['Module','Controller','Route', 'Entity'],
+            route_validator: ['Module','Controller','Route'],
+            route_file_validator: ['Controller','Route'],
+            middleware_validator: ['Auth','Module','Controller','Route'],
+            controller_validator : ['Module','Controller'],
+            entity_validator:  ['Module', 'Entity', 'Controller'],
+            entity_options_validator: ['Module', 'Entity', 'Controller'],
+        };
         
-        switch (actual_question) {
-            case 'route':
-            case 'entity_options':
-                    response = resps['type'] === 'Module' || resps['type'] === this.capitalizeString(actual_question.trim().split('-')[0] || actual_question.trim());
-                break;
-            case 'controller':
-                response = resps['type'] !== 'Entity';
-                break;
-            case 'entity':
-                    response = resps['type'] !== 'Route';
-                    break;
-            case 'route_file':
-                    response = resps['type'] !== 'Controller' && resps['type'] !== 'Entity';
-                    break;
-            default:
-                break;
-        }
+        if(handler_validator[`${actual_question}_validator`].includes(resps['type'])) response = true;
+        
         return response;
     }
     public static capitalizeString(str:string){

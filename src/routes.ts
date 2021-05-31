@@ -6,5 +6,4 @@ RoutesPaths
 .forEach(route => {
     Routes = [...Routes, ...require(`${route}`).Routes]
 });
-
 export default Routes;

@@ -1,3 +1,7 @@
+import Controllers from './config/writers/wr.controllers';
+import Entities from './config/writers/wr.entities';
+import Routes from './config/writers/wr.routes';
+import Middlewares from './config/writers/wr.middlewares';
 class WriterAEMCLI{
     protected name:string;
     protected route:string;
@@ -6,6 +10,7 @@ class WriterAEMCLI{
     protected pathname:string;
     protected entity:string;
     protected controller:string;
+    protected middleware:string;
 
     constructor(args:any){
         this.type = args['type'];
@@ -13,105 +18,36 @@ class WriterAEMCLI{
         this.route = args['route'];
         this.entity = args['entity'];
         this.controller = args['controller'];
+        this.middleware = args['middleware'];
         this.entity_options = args['entity_options'];
         this.pathname = `${__dirname}/../../modules/${this.name}`;
     }
 
-    writeDefaultController(){
-        const data:String =`import {getRepository} from "typeorm";
-import {NextFunction, Request, Response} from "express";
-import {${this.entity}} from "../Entities/${this.entity}";
-
-export class ${this.controller} {
-
-    private ${this.controller.toLowerCase()}Repository = getRepository(${this.controller});
-
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.${this.controller.toLowerCase()}Repository.find();
+    writeController(auth = false){
+        const controller_data = new Controllers(this);
+        return auth ? controller_data.controllerDataAuth() : controller_data.controllerData()
     }
-
-    async one(request: Request, response: Response, next: NextFunction) {
-        return this.${this.controller.toLowerCase()}Repository.findOne(request.params.id);
+    writeRoute (auth = false){
+        const routes_data = new Routes(this);
+        return auth && this.middleware ? routes_data.routesDataAuth() : routes_data.routesData()
     }
+    writeEntity (){
+        return (new Entities(this)).EntitiesData();
 
-    async save(request: Request, response: Response, next: NextFunction) {
-        return this.${this.controller.toLowerCase()}Repository.save(request.body);
     }
-
-    async remove(request: Request, response: Response, next: NextFunction) {
-        let ${this.controller.toLowerCase()}ToRemove = await this.${this.controller.toLowerCase()}Repository.findOne(request.params.id);
-        await this.${this.controller.toLowerCase()}Repository.remove(${this.controller.toLowerCase()}ToRemove);
+    writeMiddleware(auth = false){ 
+        const middlewares_data = new Middlewares(this);
+        return auth ? middlewares_data.middlewareDataAuth() : middlewares_data.middlewareData()
     }
-
-}`;
-        return data;
-    }
-
-    writeDefaultRoute (){
-        const data:String = `import {${this.controller}} from "../Controllers/${this.controller}";
-
-export const Routes = [{
-    method: "get",
-    route: "/${this.route}",
-    controller: ${this.controller},
-    action: "all"
-}, {
-    method: "get",
-    route: "/${this.route}/:id",
-    controller: ${this.controller},
-    action: "one"
-}, {
-    method: "post",
-    route: "/${this.route}",
-    controller: ${this.controller},
-    action: "save"
-}, {
-    method: "delete",
-    route: "/${this.route}/:id",
-    controller: ${this.controller},
-    action: "remove"
-}];`
-        return data;
-    }
-
-    writeDefaultEntity (){
-        const data:String = `import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
-
-@Entity()
-export class ${this.entity} {
-
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column()
-    column1: string;
-
-    @Column()
-    column2: string;
-
-} `;
-        return data;
-    }
-    writeDefaultMiddleware(){
-        const auth_settings = {
-            imports:`import * as jwt form 'jsonwebtoken'
-        import UsuarioController from './../Usuario/Controllers/UsuarioController'
-        import PermissaoController from './../Usuario/Permissao/PermissaoController'
-            `,
-            body:``
-        }
-        const data:String = `import express from 'express';
-
-        const ValidateUsuarios = (
-            req: express.Request,
-            res: express.Response,
-            next: express.NextFunction
-        ) =>{
-             // do stuff here
-        }
-        
-        
-        export default ValidateUsuarios;`;
+    setProperties(args){
+        this.type = args['type'] || this.type;
+        this.name = args['name'] || this.name;
+        this.route = args['route'] || this.route;
+        this.entity = args['entity'] || this.entity;
+        this.controller = args['controller'] || this.controller;
+        this.middleware = args['middleware'] || this.middleware;
+        this.entity_options = args['entity_options'] || this.entity_options;
+        this.pathname = `${__dirname}/../../modules/${this.name}`;
     }
 }
 

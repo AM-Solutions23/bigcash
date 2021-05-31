@@ -9,7 +9,8 @@ const questionsConfig = [{
 {
   "type": "input",
   "name": "name",
-  "message": "Selecione o nome da pasta do módulo desejado:"
+  "message": "Selecione o nome da pasta do módulo desejado:",
+  "when": (resps)=>{return HelperAEMCLI.validateQuestions(resps,'name')},
 },
 {
   "type": "input",
@@ -20,8 +21,15 @@ const questionsConfig = [{
 {
   "type": "input",
   "name": "route_file",
-  "message": "Selecione o nome do seu arquivo de rotas:(Default: Routes)",
+  "message": "Selecione o nome do seu arquivo de rotas:",
   "when": (resps)=>{return HelperAEMCLI.validateQuestions(resps, 'route_file')},
+  "default": "Routes"
+},
+{
+  "type": "input",
+  "name": "middleware",
+  "message": "Selecione o nome do seu middleware",
+  "when": (resps)=>{return HelperAEMCLI.validateQuestions(resps, 'middleware')},
   "default": "Routes"
 },
 {
