@@ -2,7 +2,6 @@ import * as chalk from 'chalk';
 import * as inquirer from 'inquirer';
 import {ArgsInterface} from './interfaces/builder_interfaces'
 import BuilderAEMCLI from './builder';
-import HelperAEMCLI from './helper';
 import questionsConfig from './config/questions';
 
 let args:ArgsInterface = {
