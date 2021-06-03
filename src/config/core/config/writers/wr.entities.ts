@@ -7,7 +7,7 @@ export default class Entities{
         this.entity = fragments.entity;
     }
     public EntitiesData(){
-        let data:String = `import {Entity, PrimaryGeneratedColumn, ColumnUpdate, CreateDateColumn, UpdateDateColumn} from "typeorm";
+        let data:String = `import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn} from "typeorm";
 
 @Entity()
 export class ${this.entity} {

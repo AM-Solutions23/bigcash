@@ -3,9 +3,9 @@ class HelperAEMCLI{
         let response:boolean = false;
         const handler_validator = {
             name_validator: ['Module','Controller','Route','Entity'],
-            route_validator: ['Module','Controller','Route'],
-            route_file_validator: ['Controller','Route'],
-            middleware_validator: ['Auth','Module','Controller','Route'],
+            route_validator: ['Module','Route'],
+            route_file_validator: ['Route'],
+            middleware_validator: ['Auth'],
             controller_validator : ['Module','Controller'],
             entity_validator:  ['Module', 'Entity', 'Controller'],
             entity_options_validator: ['Module', 'Entity', 'Controller'],
