@@ -24,14 +24,18 @@ export const ${this.middleware} = (
 import {UsuarioController} from './../../Usuario/Controllers/UsuarioController'
 import {PermissaoController} from './../../Permissao/Controllers/PermissaoController'
 
-export const ${this.middleware} = (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-) =>{
-        // do stuff here
-        return next();
-};`;
+export const ${this.middleware} = ( action_key:string ) =>{
+    return  (
+          req: express.Request,
+          res: express.Response,
+          next: express.NextFunction
+      )=>{
+          
+           // do stuff here
+           return next();
+      }
+         
+  };`;
         return data;
     }
 }
