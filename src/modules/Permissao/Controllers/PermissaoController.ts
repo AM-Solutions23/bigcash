@@ -1,5 +1,5 @@
 import {getRepository} from "typeorm";
-        import {NextFunction, Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {Permissao} from "./../Entities/Permissao";
 import {PermissaoActions} from "./../Entities/PermissaoActions";
 

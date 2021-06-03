@@ -29,6 +29,7 @@
       "start": "ts-node src/index.ts",
       "dev:server": "nodemon src/index.ts",
       "aemcli:generate": "ts-node src/config/core/index.ts",
-      "build": "tsc --build"
+      "build": "tsc --build",
+      "aemcli:seed": "ts-node src/seeder.ts"
    }
 }
