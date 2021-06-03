@@ -6,7 +6,7 @@ class BuilderAEMCLI extends WriterAEMCLI {
     protected name:string;
     protected route:string;
     protected type:string;
-    protected entity_options:Array<string>;
+    protected entity_options:string;
     protected pathname:string;
     protected entity:string;
     protected controller:string;
@@ -89,22 +89,22 @@ class BuilderAEMCLI extends WriterAEMCLI {
        
     }
     private createModule(auth:boolean = false, no_middleware = false){
-        try {
-
-            !fs.existsSync(this.pathname) && 
-            fs.mkdir(this.pathname, err =>{
-
-                if(this.createModuleFolders()){
-                    this.createController(auth);
-                    this.createRoute(auth);
-                    this.createEntity();
-                    !no_middleware && this.createMiddleware();
-                }
-            });
-            return true;
-        } catch (error) {
-            return false;
-        }
+        return new Promise(resolve=>{
+            try {
+                !fs.existsSync(this.pathname) && 
+                fs.mkdir(this.pathname, err =>{
+                    if(this.createModuleFolders()){
+                        this.createController(auth)
+                        this.createRoute(auth)
+                        this.createEntity()
+                        !no_middleware && this.createMiddleware()
+                        resolve(true);
+                    }
+                });
+            } catch (error) {
+                resolve(false);
+            }
+        });
         
     }
     private createMiddleware(auth:boolean = false){
@@ -148,25 +148,16 @@ class BuilderAEMCLI extends WriterAEMCLI {
                 route:'usuarios',
                 name:'Usuario',
                 entity:'Usuario',
-                entity_importers:["import {Permissao} from './../../Permissao/Entities/Permissao'"],
                 controller:'UsuarioController',
                 auth:false,
-                entity_options:['nome:string','email:string','senha:string',{
-                    header:'@OneToMany(type => Permissao, permissao => permissao.usuario)',
-                    body:'permissoes: Permissao[]'
-                }]
+                entity_options:'name:string,senha:string,permissao:number'
                 },{
                 name:'Permissao',
                 route:'permissoes',
                 entity:'Permissao',
-                entity_importers:["import {Usuario} from './../../Usuario/Entities/Usuario'"],
                 controller:'PermissaoController',
                 auth:false,
-                entity_options:[{
-                    header:'@ManyToOne(type => Usuario, usuario => usuario.permissoes)', 
-                    body:'usuario:Usuario'
-                    },
-                    'action_key:string',]
+                entity_options:'nome:string'
                 },{
                 name:'Auth',
                 route:'auth',
@@ -180,13 +171,12 @@ class BuilderAEMCLI extends WriterAEMCLI {
                 route:'modulos',
                 entity:'Modulos',
                 controller:'ModulosController',
-                entity_options:['nome:string','status:boolean',]
+                entity_options:'nome:string,status:boolean'
                 }
             ]
             modules_auth.forEach(module => {
                 this.handleAuthCreation(module); 
-            });    
-
+            });
             return true;
         } catch (error) {
             
@@ -195,9 +185,22 @@ class BuilderAEMCLI extends WriterAEMCLI {
 
     private handleAuthCreation(module){
         const module_instance = new BuilderAEMCLI(module);
-        module_instance.createModule(module.auth, true);
-        if(module.name === 'Auth') module_instance.createMiddleware(true);
-        this.setProperties(module);
+        module_instance.createModule(module.auth, true)
+        .then(resp =>{
+            if(resp){
+                if(module.name === 'Auth') module_instance.createMiddleware(true);
+                if(module.name === 'Permissao'){
+                    module.entity = 'PermissaoActions';
+                    module.entity_options = 'permissao:number,action:string';
+                    this.setProperties(module);
+                    const entity_options_instance = new BuilderAEMCLI(module);
+                    entity_options_instance.createEntity();
+                } 
+                this.setProperties(module);
+            }
+            
+        });
+        
     }
     
 }

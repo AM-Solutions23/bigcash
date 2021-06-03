@@ -6,8 +6,7 @@ class WriterAEMCLI{
     protected name:string;
     protected route:string;
     protected type:string;
-    protected entity_options:Array<any>;
-    protected entity_importers:any;
+    protected entity_options:string;
     protected pathname:string;
     protected entity:string;
     protected controller:string;
@@ -21,7 +20,6 @@ class WriterAEMCLI{
         this.controller = args['controller'];
         this.middleware = args['middleware'];
         this.entity_options = args['entity_options'];
-        this.entity_importers = args['entity_importers'] || null;
         this.pathname = `${__dirname}/../../modules/${this.name}`;
     }
 
@@ -49,7 +47,6 @@ class WriterAEMCLI{
         this.controller = args['controller'] || this.controller;
         this.middleware = args['middleware'] || this.middleware;
         this.entity_options = args['entity_options'] || this.entity_options;
-        this.entity_importers = args['entity_importers'] || null;
         this.pathname = `${__dirname}/../../modules/${this.name}`;
     }
 }
