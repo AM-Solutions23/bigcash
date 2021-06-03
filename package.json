@@ -27,7 +27,7 @@
    },
    "scripts": {
       "start": "ts-node src/index.ts",
-      "dev:server": "nodemon --watch './**/*.ts' --exec ts-node src/index.ts",
+      "dev:server": "nodemon src/index.ts",
       "aemcli:generate": "ts-node src/config/core/index.ts",
       "build": "tsc --build"
    }
