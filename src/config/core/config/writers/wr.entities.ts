@@ -7,7 +7,7 @@ export default class Entities{
         this.entity = fragments.entity;
     }
     public EntitiesData(){
-        let data:String = `import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+        let data:String = `import {Entity, PrimaryGeneratedColumn, ColumnUpdate, CreateDateColumn, UpdateDateColumn} from "typeorm";
 
 @Entity()
 export class ${this.entity} {
@@ -32,7 +32,13 @@ this.entity_options.split(',').forEach(option =>{
     column2:string;
     `
 }
-data += ` } `;
+data += ` 
+@CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+created_at: Date;
+
+@UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+updated_at: Date;
+} `;
                 return data;
     }
 }

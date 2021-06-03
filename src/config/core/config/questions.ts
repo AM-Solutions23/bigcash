@@ -29,8 +29,7 @@ const questionsConfig = [{
   "type": "input",
   "name": "middleware",
   "message": "Selecione o nome do seu middleware",
-  "when": (resps)=>{return HelperAEMCLI.validateQuestions(resps, 'middleware')},
-  "default": "Routes"
+  "when": (resps)=>{return HelperAEMCLI.validateQuestions(resps, 'middleware')}
 },
 {
   "type": "input",

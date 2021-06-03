@@ -192,7 +192,6 @@ class BuilderAEMCLI extends WriterAEMCLI {
                 if(module.name === 'Permissao'){
                     module.entity = 'PermissaoActions';
                     module.entity_options = 'permissao:number,action:string';
-                    this.setProperties(module);
                     const entity_options_instance = new BuilderAEMCLI(module);
                     entity_options_instance.createEntity();
                 } 
