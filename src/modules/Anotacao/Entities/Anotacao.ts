@@ -10,7 +10,7 @@ export class Anotacao {
     titulo:string;
 
     
-    @Column()
+    @Column("longtext")
     anotacao:string;
 
     

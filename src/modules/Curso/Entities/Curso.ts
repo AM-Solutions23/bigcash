@@ -18,7 +18,7 @@ export class Curso {
     usuario:number;
 
     
-    @Column()
+    @Column("longtext")
     descricao:string;
 
     
