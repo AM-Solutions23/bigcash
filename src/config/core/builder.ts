@@ -148,14 +148,25 @@ class BuilderAEMCLI extends WriterAEMCLI {
                 route:'usuarios',
                 name:'Usuario',
                 entity:'Usuario',
+                entity_importers:["import {Permissao} from './../../Permissao/Entities/Permissao'"],
                 controller:'UsuarioController',
-                auth:false
+                auth:false,
+                entity_options:['nome:string','email:string','senha:string',{
+                    header:'@OneToMany(type => Permissao, permissao => permissao.usuario)',
+                    body:'permissoes: Permissao[]'
+                }]
                 },{
                 name:'Permissao',
                 route:'permissoes',
                 entity:'Permissao',
+                entity_importers:["import {Usuario} from './../../Usuario/Entities/Usuario'"],
                 controller:'PermissaoController',
-                auth:false
+                auth:false,
+                entity_options:[{
+                    header:'@ManyToOne(type => Usuario, usuario => usuario.permissoes)', 
+                    body:'usuario:Usuario'
+                    },
+                    'action_key:string',]
                 },{
                 name:'Auth',
                 route:'auth',
@@ -163,6 +174,13 @@ class BuilderAEMCLI extends WriterAEMCLI {
                 middleware: this.middleware,
                 controller:'AuthController',
                 auth:true
+                },
+                {
+                name:'Modulos',
+                route:'modulos',
+                entity:'Modulos',
+                controller:'ModulosController',
+                entity_options:['nome:string','status:boolean',]
                 }
             ]
             modules_auth.forEach(module => {

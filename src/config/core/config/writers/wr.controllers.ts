@@ -19,8 +19,8 @@ export class ${this.controller} {
         return this.${this.controller.toLowerCase()}Repository.find();
     }
 
-    async one(request: Request, response: Response, next: NextFunction) {
-        return this.${this.controller.toLowerCase()}Repository.findOne(request.params.id);
+    async one(request: Object) {
+        return this.${this.controller.toLowerCase()}Repository.findOne(request);
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
@@ -39,17 +39,25 @@ export class ${this.controller} {
         const data:String =`import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {${this.entity}} from "./../Entities/${this.entity}";
+import {UsuarioController} from './../../Usuario/Controllers/UsuarioController';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
 export class ${this.controller} {
 
     private ${this.controller.toLowerCase()}Repository = getRepository(${this.entity});
 
     async login(request: Request, response: Response, next: NextFunction) {
-        // do stuff
+        const user = await (new UsuarioController).one({email: request.body.email})
+        if(user && await bcrypt.compare(request.body.senha, user.senha))
+            return response.status(200)
+            .json({status:true, token_:jwt.sign({id: user.id}, 'aemcli2021_ts_schema@'), message:'Logado com sucesso!'})
+        else
+            response.status(200).json({status:false, message:'Usuário ou senha incorretos!'})
     }
 
     async logout(request: Request, response: Response, next: NextFunction) {
-        // do stuff
+        return response.status(200).json({status:true, message:'Deslogado com sucesso!', token_:null})
     }
 
 }`;

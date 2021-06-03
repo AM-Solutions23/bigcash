@@ -54,7 +54,7 @@ import {${this.middleware}} from "./../Middlewares/${this.middleware}";
 export const Routes = [{
     method: "post",
     route: "/${this.route}/login",
-    controller: "${this.controller}",
+    controller: ${this.controller},
     action: "login",
     middleware: ${this.middleware},
     action_key: "all_${this.route}"
