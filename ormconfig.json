@@ -10,7 +10,7 @@
    "entities": [
       "src/modules/**/Entities/*.ts"
    ],
-   "migrations": [
+   "migrations": [ 
       "src/migration/**/*.ts"
    ],
    "subscribers": [
