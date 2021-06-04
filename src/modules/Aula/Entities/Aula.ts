@@ -15,12 +15,13 @@ export class Aula {
     
     @Column()
     video:string;
-
     
     @Column()
     finalizado:boolean;
 
-    
+    @Column()
+    curso_modulos:number;
+
     @Column()
     status:boolean;
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
