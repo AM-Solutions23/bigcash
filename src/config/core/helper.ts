@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 class HelperAEMCLI{
     public static async validateQuestions(resps:Array<any>, actual_question:string){
         let response:boolean = false;
@@ -17,6 +18,12 @@ class HelperAEMCLI{
     }
     public static capitalizeString(str:string){
         return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    public static saveFile(module, file){
+        const pathname = `src/${module}/Storage/`;
+        !fs.existsSync(pathname) && fs.mkdir(pathname, err =>{return !err;});
+        fs.writeFileSync(`${pathname}/${file.file_name}`, file)
+        return file.filename;
     }
 }
 export default HelperAEMCLI;

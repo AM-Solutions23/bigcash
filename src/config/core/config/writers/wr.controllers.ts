@@ -24,6 +24,7 @@ export class ${this.controller} {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
+        request.body.usuario = request.body.usuario || request.params.usuario_id;
         return this.${this.controller.toLowerCase()}Repository.save(request.body);
     }
 
