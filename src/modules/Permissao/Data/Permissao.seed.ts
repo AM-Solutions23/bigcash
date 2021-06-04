@@ -1,27 +1,28 @@
-import { Permissao } from './../Entities/Permissao';
-import { getRepository } from 'typeorm';
+import { Permissao } from "./../Entities/Permissao";
+import { createConnection } from "typeorm";
 
-const seederUsuario = () => {
-	const permissaoData = [
-		{
-			nome: 'Administrador',
-		},
-		{
-			nome: 'Criador de conteúdo',
-		},
-		{
-			nome: 'Professor',
-		},
-		{
-			nome: 'Aluno',
-		},
-	];
+export default (function () {
+	createConnection().then((connec) => {
+		const permissaoData = [
+			{
+				nome: "Administrador",
+			},
+			{
+				nome: "Criador de conteúdo",
+			},
+			{
+				nome: "Professor",
+			},
+			{
+				nome: "Aluno",
+			},
+		];
 
-	const permissao_ = getRepository(Permissao);
+		const permissao_ = connec.getRepository(Permissao);
 
-	permissaoData.forEach(async permissao => {
-		console.log(await permissao_.save(permissao));
+		permissaoData.forEach(async (permissao) => {
+			await permissao_.save(permissao);
+		});
 	});
-};
-
-export default seederUsuario;
+	return true;
+})();

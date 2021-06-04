@@ -5,7 +5,7 @@
    "username": "root",
    "password": "",
    "database": "missao_enem",
-   "synchronize": false,
+   "synchronize": true,
    "logging": false,
    "entities": [
       "src/modules/**/Entities/*.ts"
