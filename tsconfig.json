@@ -12,8 +12,9 @@
       "experimentalDecorators": true,
       "sourceMap": true,
       "skipLibCheck": true,
+      "baseUrl": "./src",
       "paths": {
-         "@helper": ["./src/config/core/helper"],
+         "@helper": ["./src/config/core/helper"]
        }
    }
 }
