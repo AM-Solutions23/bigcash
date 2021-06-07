@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
-import { Log, LogType } from "./../Entities/Log";
-import { UsuarioController } from "./../../Usuario/Controllers/UsuarioController";
+import { Log, LogType } from "../Entities/Log";
+import { UsuarioController } from "../../Usuario/Controllers/UsuarioController";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 

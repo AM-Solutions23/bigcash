@@ -1,6 +1,6 @@
 import {getRepository} from "typeorm";
         import {NextFunction, Request, Response} from "express";
-import {Modulos} from "./../Entities/Modulos";
+import {Modulos} from "../Entities/Modulos";
 
 export class ModulosController {
 

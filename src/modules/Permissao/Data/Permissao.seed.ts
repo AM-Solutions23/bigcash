@@ -1,4 +1,4 @@
-import { Permissao } from "./../Entities/Permissao";
+import { Permissao } from "../Entities/Permissao";
 import { createConnection } from "typeorm";
 
 export default (function () {

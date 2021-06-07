@@ -1,6 +1,6 @@
 import {getRepository} from "typeorm";
         import {NextFunction, Request, Response} from "express";
-import {Permissao} from "./../Entities/Permissao";
+import {Permissao} from "../Entities/Permissao";
 
 export class PermissaoController {
 

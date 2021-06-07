@@ -1,4 +1,4 @@
-import HelperAEMCLI from './../helper';
+import HelperAEMCLI from '../helper';
 
 const questionsConfig = [{
     "type": "list",

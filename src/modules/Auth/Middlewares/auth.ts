@@ -1,5 +1,5 @@
 import express from "express";
-import { UsuarioController } from "./../../Usuario/Controllers/UsuarioController";
+import { UsuarioController } from "../../Usuario/Controllers/UsuarioController";
 import * as jwt from "jsonwebtoken";
 
 export const auth = (action_key: string) => {

@@ -1,6 +1,6 @@
 import {getRepository} from "typeorm";
         import {NextFunction, Request, Response} from "express";
-import {Usuario} from "./../Entities/Usuario";
+import {Usuario} from "../Entities/Usuario";
 
 export class UsuarioController {
 

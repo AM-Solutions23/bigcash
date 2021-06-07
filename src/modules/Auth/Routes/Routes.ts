@@ -1,5 +1,5 @@
 import {AuthController} from "../Controllers/AuthController";
-import {auth} from "./../Middlewares/auth";
+import {auth} from "../Middlewares/auth";
 export const Routes = [{
     method: "post",
     route: "/auth/login",
