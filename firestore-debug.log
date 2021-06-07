@@ -1,9 +1,0 @@
-Jun 07, 2021 4:01:15 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
-INFO: Started WebSocket server on ws://localhost:55228
-API endpoint: http://localhost:3003
-If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
-
-   export FIRESTORE_EMULATOR_HOST=localhost:3003
-
-Dev App Server is now running.
-
