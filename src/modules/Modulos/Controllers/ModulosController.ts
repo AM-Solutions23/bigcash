@@ -15,7 +15,13 @@ export class ModulosController {
 
 	async save(request: Request, response: Response, next: NextFunction) {
 		request.body.usuario = request.body.usuario || request.params.usuario_id;
-		return this.modulosControllerRepository.save(request.body);
+
+		try {
+			await this.modulosControllerRepository.save(request.body);
+			response.status(200).json({status: true, message: 'Usuário criado com sucesso!'})
+		} catch (error) {
+			response.status(500).json({status: false, message: 'Falha ao criar usuário!'})
+		}
 	}
 
 	async update(request: Request, response: Response, next: NextFunction) {
