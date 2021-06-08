@@ -4,6 +4,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { Request, Response } from 'express';
 import Routes from './routes';
+import * as LogService from './services/log';
 
 createConnection().then(connection => {
 	const app = express();
@@ -21,16 +22,40 @@ createConnection().then(connection => {
 					next
 				);
 				if (result instanceof Promise) {
-					result.then(result =>
-						result !== null && result !== undefined
-							? result
-							: undefined
-					);
+					result.then(result =>{
+						if(result !== null && result !== undefined){
+							const log = {
+								action_key: route.action_key,
+								usuario: req.params.usuario_id,
+								tipo: '',
+								user_ip: req.body.user_ip,
+								user_coordenadas:req.headers.user_coordenadas,
+								user_device: req.headers.user_device,
+								module: route.module,
+								status: true,
+								erro: null
+							}
+							LogService.createLOG(log);
+							result
+						}
+					});
 				} else if (result !== null && result !== undefined) {
+					const log = {
+						action_key: route.action_key,
+						usuario: req.params.usuario_id,
+						tipo: '',
+						user_ip: req.headers.user_ip,
+						user_coordenadas:req.headers.user_coordenadas,
+						user_device: req.headers.user_device,
+						module: route.module,
+						status: false,
+						erro: result
+					}
+					LogService.createLOG(log);
 					result
 				}
 			}
 		);
 	});
-	app.listen(3001, () => console.log(`Server started on port 3000`));
+	app.listen(3000, () => console.log(`Server started on port 3000`));
 });

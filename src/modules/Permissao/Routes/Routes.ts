@@ -8,6 +8,7 @@ export const Routes = [
 		action: 'all',
 		middleware: auth,
 		action_key: 'all_permissoes',
+		module: 'Permissao'
 	},
 	{
 		method: 'get',
@@ -16,6 +17,8 @@ export const Routes = [
 		middleware: auth,
 		action: 'one',
 		action_key: 'one_permissoes',
+		module: 'Permissao'
+
 	},
 	{
 		method: 'post',
@@ -24,6 +27,8 @@ export const Routes = [
 		middleware: auth,
 		action: 'save',
 		action_key: 'save_permissoes',
+		module: 'Permissao'
+
 	},
     {
 		method: 'put',
@@ -32,6 +37,8 @@ export const Routes = [
 		middleware: auth,
 		action: 'update',
 		action_key: 'update_permissoes',
+		module: 'Permissao'
+
 	},
 	{
 		method: 'delete',
@@ -40,5 +47,7 @@ export const Routes = [
 		middleware: auth,
 		action: 'remove',
 		action_key: 'remove_permissoes',
+		module: 'Permissao'
+
 	},
 ];

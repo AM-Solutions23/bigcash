@@ -8,6 +8,7 @@ export const Routes = [
 		action: 'all',
 		middleware: auth,
 		action_key: 'all_perfis',
+		module: 'Perfil'
 	},
 	{
 		method: 'get',
@@ -16,6 +17,7 @@ export const Routes = [
 		middleware: auth,
 		action: 'one',
 		action_key: 'one_perfis',
+		module: 'Perfil'
 	},
 	{
 		method: 'post',
@@ -24,6 +26,7 @@ export const Routes = [
 		middleware: auth,
 		action: 'save',
 		action_key: 'save_perfis',
+		module: 'Perfil'
 	},
     {
 		method: 'put',
@@ -40,5 +43,6 @@ export const Routes = [
 		middleware: auth,
 		action: 'remove',
 		action_key: 'remove_perfis',
+		module: 'Perfil'
 	},
 ];

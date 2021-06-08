@@ -5,17 +5,22 @@ export const Routes = [{
     route: "/auth/login",
     controller: AuthController,
     action: "login",
+    module: 'Auth'
 },{
     method: "post",
     route: "/auth/login-google",
     controller: AuthController,
     action: "loginGoogle",
-    action_key: "google_auth"
+    action_key: "google_auth",
+    module: 'Auth'
+
 }, {
     method: "get",
     route: "/auth/logout",
     controller: AuthController,
     action: "logout",
     middleware: auth,
-    action_key: "logout_auth"
+    action_key: "logout_auth",
+    module: 'Auth'
+
 }];

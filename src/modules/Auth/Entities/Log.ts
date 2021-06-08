@@ -37,6 +37,15 @@ export class Log {
     @Column()
 	action_key: string;
 
+	@Column()
+	module: string;
+
+	@Column()
+	status: boolean;
+
+	@Column()
+	erro: string;
+
 	@CreateDateColumn({
 		type: "timestamp",
 		default: () => "CURRENT_TIMESTAMP(6)",
