@@ -21,11 +21,11 @@ export const prepareLoginOrCreate = async (token_id, profile_id) => {
 
 	if (!checkUserExists(firebaseUser, profile_id)) {
 		const credential = firebase.auth.GoogleAuthProvider.credential(token_id);
-		const pedro = await loginOrCreate(credential);
+		const login_resp = await loginOrCreate(credential);
 		const user_data = {
-			email: pedro.additionalUserInfo.profile['email'],
-			nome: pedro.additionalUserInfo.profile['name'],
-			provider: pedro.additionalUserInfo.providerId,
+			email: login_resp.additionalUserInfo.profile['email'],
+			nome: login_resp.additionalUserInfo.profile['name'],
+			provider: login_resp.additionalUserInfo.providerId,
 		};
 		return await handleFirebaseDataToDB(user_data);
 	} else {
