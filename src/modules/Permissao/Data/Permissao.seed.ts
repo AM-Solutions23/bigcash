@@ -1,29 +1,34 @@
-import { Permissao } from "../Entities/Permissao";
-import { createConnection } from "typeorm";
+import { Permissao } from '../Entities/Permissao';
+import { createConnection } from 'typeorm';
 
 export default (function () {
-	createConnection().then((connec) => {
+	createConnection().then(connec => {
 		const permissaoData = [
 			{
-				nome: "User",
+				id: 1,
+				nome: 'Root',
 			},
 			{
-				nome: "Support",
+				id: 2,
+				nome: 'Admin',
 			},
 			{
-				nome: "Manager",
+				id: 3,
+				nome: 'Manager',
 			},
 			{
-				nome: "Admin",
+				id: 4,
+				nome: 'Support',
 			},
 			{
-				nome: "Root",
+				id: 5,
+				nome: 'User',
 			},
 		];
 
 		const permissao_ = connec.getRepository(Permissao);
 
-		permissaoData.forEach(async (permissao) => {
+		permissaoData.forEach(async permissao => {
 			await permissao_.save(permissao);
 		});
 	});

@@ -4,7 +4,10 @@ import {
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
+	BeforeInsert,
+	BeforeUpdate,
 } from 'typeorm';
+import { hash } from 'bcrypt';
 
 @Entity()
 export class Usuario {
@@ -12,18 +15,18 @@ export class Usuario {
 	id: number;
 
 	@Column()
-	name: string;
+	nome: string;
 
-	@Column()
+	@Column({ unique: true })
 	email: string;
 
-	@Column({nullable: true})
+	@Column({ nullable: true })
 	senha: string;
 
 	@Column({ default: null })
 	provider: string;
 
-	@Column()
+	@Column({ unique: true })
 	cpf_cnpj: string;
 
 	@Column()
@@ -41,4 +44,10 @@ export class Usuario {
 		onUpdate: 'CURRENT_TIMESTAMP(6)',
 	})
 	updated_at: Date;
+
+	@BeforeInsert()
+	@BeforeUpdate()
+	async hashPassword() {
+		this.senha = await hash(this.senha, 10);
+	}
 }

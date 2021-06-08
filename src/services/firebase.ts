@@ -59,7 +59,7 @@ export const getUser = () => {
 const handleFirebaseDataToDB = async (user_data) => {
 	const usuario = new Usuario();
 	const usuario_repo = getRepository(Usuario);
-	usuario.name = user_data.nome;
+	usuario.nome = user_data.nome;
 	usuario.email = user_data.email;
 	usuario.provider = user_data.provider;
 	usuario.permissao = 1;

@@ -5,18 +5,17 @@ export const Routes = [{
     route: "/auth/login",
     controller: AuthController,
     action: "login",
-    action_key: "all_auth"
 },{
     method: "post",
     route: "/auth/login-google",
     controller: AuthController,
     action: "loginGoogle",
-    action_key: "all_auth"
+    action_key: "google_auth"
 }, {
     method: "get",
     route: "/auth/logout",
     controller: AuthController,
     action: "logout",
     middleware: auth,
-    action_key: "one_auth"
+    action_key: "logout_auth"
 }];
