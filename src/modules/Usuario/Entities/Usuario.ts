@@ -4,13 +4,7 @@ import {
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
-} from "typeorm";
-
-export enum UserRole {
-	EMPREENDEDOR = "empreendedor",
-	CREDENCIADO = "credenciado",
-	PARCEIRO = "parceiro",
-}
+} from 'typeorm';
 
 @Entity()
 export class Usuario {
@@ -21,24 +15,30 @@ export class Usuario {
 	name: string;
 
 	@Column()
+	email: string;
+
+	@Column({nullable: true})
 	senha: string;
+
+	@Column({ default: null })
+	provider: string;
+
+	@Column()
+	cpf_cnpj: string;
 
 	@Column()
 	permissao: number;
 
-	@Column({ type: "enum", enum: UserRole, default: UserRole.EMPREENDEDOR })
-	tipo: UserRole;
-
 	@CreateDateColumn({
-		type: "timestamp",
-		default: () => "CURRENT_TIMESTAMP(6)",
+		type: 'timestamp',
+		default: () => 'CURRENT_TIMESTAMP(6)',
 	})
 	created_at: Date;
 
 	@UpdateDateColumn({
-		type: "timestamp",
-		default: () => "CURRENT_TIMESTAMP(6)",
-		onUpdate: "CURRENT_TIMESTAMP(6)",
+		type: 'timestamp',
+		default: () => 'CURRENT_TIMESTAMP(6)',
+		onUpdate: 'CURRENT_TIMESTAMP(6)',
 	})
 	updated_at: Date;
 }

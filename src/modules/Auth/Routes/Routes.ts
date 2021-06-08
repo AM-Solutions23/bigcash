@@ -5,7 +5,12 @@ export const Routes = [{
     route: "/auth/login",
     controller: AuthController,
     action: "login",
-    middleware: auth,
+    action_key: "all_auth"
+},{
+    method: "post",
+    route: "/auth/login-google",
+    controller: AuthController,
+    action: "loginGoogle",
     action_key: "all_auth"
 }, {
     method: "get",

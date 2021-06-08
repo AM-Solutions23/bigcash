@@ -8,6 +8,7 @@ import Routes from './routes';
 createConnection().then(connection => {
 	const app = express();
 	app.use(bodyParser.json());
+	app.use(express.urlencoded({ extended: true }));
 	// register express routes from defined application routes
 	Routes.forEach(route => {
 		(app as any)[route.method](
@@ -22,14 +23,14 @@ createConnection().then(connection => {
 				if (result instanceof Promise) {
 					result.then(result =>
 						result !== null && result !== undefined
-							? res.send(result)
+							? result
 							: undefined
 					);
 				} else if (result !== null && result !== undefined) {
-					res.json(result);
+					result
 				}
 			}
 		);
 	});
-	app.listen(3000, () => console.log(`Server started on port 3000`));
+	app.listen(3001, () => console.log(`Server started on port 3000`));
 });
