@@ -8,14 +8,13 @@ export default (function () {
 	createConnection().then(connec => {
 		permissoes.forEach(permissao => {
 			Routes.forEach(route => {
-				
-				route.action_key && permissaoActionsData.push({
-					permissao: permissao,
-					action: route.action_key,
-				});
+				route.action_key &&
+					permissaoActionsData.push({
+						permissao: permissao,
+						action: route.action_key,
+					});
 			});
 		});
-		console.log(permissaoActionsData);
 		const permissaoActions = connec.getRepository(PermissaoActions);
 
 		permissaoActionsData.forEach(async data => {
