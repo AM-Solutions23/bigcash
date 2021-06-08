@@ -35,7 +35,7 @@ createConnection().then(connection => {
 								status: true,
 								erro: null
 							}
-							LogService.createLOG(log);
+							// LogService.createLOG(log);
 							result
 						}
 					});
@@ -51,7 +51,7 @@ createConnection().then(connection => {
 						status: false,
 						erro: result
 					}
-					LogService.createLOG(log);
+					// LogService.createLOG(log);
 					result
 				}
 			}

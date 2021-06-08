@@ -1,9 +1,12 @@
 import { getRepository } from 'typeorm';
 import { NextFunction, Request, Response } from 'express';
 import { Permissao } from '../Entities/Permissao';
+import { PermissaoActions } from '../Entities/PermissaoActions';
 
 export class PermissaoController {
 	private permissaoControllerRepository = getRepository(Permissao);
+	private PermissaoActionscontrollerRepository =
+		getRepository(PermissaoActions);
 
 	async all(request: Request, response: Response, next: NextFunction) {
 		return this.permissaoControllerRepository.find();
@@ -42,5 +45,16 @@ export class PermissaoController {
 		await this.permissaoControllerRepository.remove(
 			permissaoControllerToRemove
 		);
+	}
+
+	async actions(request: Object) {
+		return this.PermissaoActionscontrollerRepository.find({
+			where: [
+				{
+					permissao: request,
+				},
+			],
+			select: ['action'],
+		});
 	}
 }
