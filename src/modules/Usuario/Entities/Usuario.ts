@@ -3,12 +3,8 @@ import {
 	PrimaryGeneratedColumn,
 	Column,
 	CreateDateColumn,
-	UpdateDateColumn,
-	BeforeInsert,
-	BeforeUpdate,
+	UpdateDateColumn
 } from 'typeorm';
-import { hash } from 'bcrypt';
-
 @Entity()
 export class Usuario {
 	@PrimaryGeneratedColumn()
@@ -17,17 +13,32 @@ export class Usuario {
 	@Column()
 	nome: string;
 
-	@Column({ unique: true })
+	@Column({ unique: true, nullable: true })
 	email: string;
 
-	@Column({ nullable: true })
-	senha: string;
+	@Column({ unique: true, nullable: true })
+	login: string;
 
 	@Column({ default: null })
 	provider: string;
 
-	@Column({ unique: true })
+	@Column({ default: null })
+	telefone: string;
+
+	@Column({ default: null })
+	patrocinador: number;
+
+	@Column({ default: null })
+	credenciado: number;
+
+	@Column({ unique: true, nullable: true })
 	cpf_cnpj: string;
+
+	@Column({nullable: true})
+	foto: string;
+
+	@Column({default: 1})
+	ativo: number;
 
 	@Column()
 	permissao: number;
@@ -43,11 +54,5 @@ export class Usuario {
 		default: () => 'CURRENT_TIMESTAMP(6)',
 		onUpdate: 'CURRENT_TIMESTAMP(6)',
 	})
-	updated_at: Date;
-
-	@BeforeInsert()
-	@BeforeUpdate()
-	async hashPassword() {
-		this.senha = await hash(this.senha, 10);
-	}
+	updated_at: Date;	
 }

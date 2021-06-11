@@ -49,11 +49,7 @@ export class PermissaoController {
 
 	async actions(request: Object) {
 		return this.PermissaoActionscontrollerRepository.find({
-			where: [
-				{
-					permissao: request,
-				},
-			],
+			where: [request],
 			select: ['action'],
 		});
 	}

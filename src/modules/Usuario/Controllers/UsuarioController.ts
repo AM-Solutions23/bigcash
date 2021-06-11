@@ -9,7 +9,17 @@ export class UsuarioController {
 	private usuarioPerfisControllerRepository = getRepository(UsuarioPerfis);
 
 	async all(request: Request, response: Response, next: NextFunction) {
-		response.status(200).json({status: true, message: 'Usuário criado com sucesso!', usuarios: await this.usuarioControllerRepository.find()})
+		try {
+			response.status(200).json({
+				status: true,
+				message: 'Usuários listados com sucesso!',
+				usuarios: await this.usuarioControllerRepository.find(),
+			});
+		} catch (error) {
+			response
+				.status(500)
+				.json({ status: false, message: 'Falha ao listar usuários' });
+		}
 	}
 
 	async one(request: Object) {
@@ -18,15 +28,31 @@ export class UsuarioController {
 
 	async save(request: Request, response: Response, next: NextFunction) {
 		try {
-			const user = await this.usuarioControllerRepository.save(request.body);
-			if(request.body.perfil){
-				const perfil_user = {usuario: user.id, perfil: request.body.perfil}
-				this.usuarioPerfisControllerRepository.save(Object.assign(new UsuarioPerfis(), perfil_user))
+			const check_ = await this.checkBeforeInsert(request.body);
+			if (!check_) {
+				if (!(await this.one({ id: request.body.credenciado })))
+					return response
+						.status(500)
+						.json({ status: false, message: 'Credenciado não encontrado' });
+				const user = await this.usuarioControllerRepository.save(request.body);
+
+				if (request.body.perfil) {
+					const perfil_user = { usuario: user.id, perfil: request.body.perfil };
+					this.usuarioPerfisControllerRepository.save(
+						Object.assign(new UsuarioPerfis(), perfil_user)
+					);
+				}
+				response
+					.status(200)
+					.json({ status: true, message: 'Usuário criado com sucesso!' });
+			} else {
+				const field_ = check_['login'] ? 'Login' : 'CPF/CNPJ';
+				response
+					.status(500)
+					.json({ status: false, message: `${field_} já cadastrado!` });
 			}
-			response.status(200).json({status: true, message: 'Usuário criado com sucesso!'})
 		} catch (error) {
-			response.status(500).json({status: false, message: 'Falha ao criar usuário!'})
-			
+			response.status(500).json({ status: false, message: error });
 		}
 	}
 
@@ -39,11 +65,11 @@ export class UsuarioController {
 			if (request.body.senha !== undefined) {
 				request.body.senha = await hash(request.body.senha, 10);
 			}
-			await this.usuarioControllerRepository.save(request.body)
+			await this.usuarioControllerRepository.save(request.body);
 
 			return response.status(200).json({
 				status: true,
-				message: 'Usuário atualizado com sucesso'
+				message: 'Usuário atualizado com sucesso',
 			});
 		} catch (err) {
 			console.log(err);
@@ -57,5 +83,25 @@ export class UsuarioController {
 		let usuariocontrollerToRemove =
 			await this.usuarioControllerRepository.findOne(request.params.id);
 		await this.usuarioControllerRepository.remove(usuariocontrollerToRemove);
+	}
+
+	async checkBeforeInsert(params) {
+		return await this.usuarioControllerRepository
+			.createQueryBuilder('usuario')
+			.where(
+				`usuario.cpf_cnpj = "${params['cpf_cnpj']}" OR usuario.login = "${params['login']}"`
+			)
+			.getOne();
+	}
+
+	async getPerfils(usuario) {
+		try {
+			return await this.usuarioPerfisControllerRepository.find({
+				where: [{ usuario }],
+				select: ['perfil'],
+			});
+		} catch (error) {
+			return [false];
+		}
 	}
 }

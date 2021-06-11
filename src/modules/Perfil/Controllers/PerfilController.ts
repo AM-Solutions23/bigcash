@@ -6,7 +6,19 @@ export class PerfilController {
 	private perfilControllerRepository = getRepository(Perfil);
 
 	async all(request: Request, response: Response, next: NextFunction) {
-		return this.perfilControllerRepository.find();
+		try {
+			response
+				.status(200)
+				.json({
+					status: true,
+					message: 'Usuários listados com sucesso!',
+					usuarios: await this.perfilControllerRepository.find(),
+				});
+		} catch (error) {
+			response
+				.status(500)
+				.json({ status: false, message: 'Falha ao listar usuários' });
+		}
 	}
 
 	async one(request: Object) {
@@ -14,7 +26,16 @@ export class PerfilController {
 	}
 
 	async save(request: Request, response: Response, next: NextFunction) {
-		return this.perfilControllerRepository.save(request.body);
+		try {
+			await this.perfilControllerRepository.save(request.body);
+			response
+				.status(200)
+				.json({ status: true, message: 'Perfil criado com sucesso!' });
+		} catch (error) {
+			response
+				.status(500)
+				.json({ status: false, message: 'Falha ao criar perfil!' });
+		}
 	}
 
 	async update(request: Request, response: Response, next: NextFunction) {

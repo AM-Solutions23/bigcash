@@ -6,7 +6,11 @@ export class ModulosController {
 	private modulosControllerRepository = getRepository(Modulos);
 
 	async all(request: Request, response: Response, next: NextFunction) {
-		return this.modulosControllerRepository.find();
+		try {
+			response.status(200).json({status: true, message: 'Usuários listados com sucesso!', usuarios: await this.modulosControllerRepository.find()})
+		} catch (error) {
+			response.status(500).json({status: false, message: 'Falha ao listar usuários'})
+		}
 	}
 
 	async one(request: Object) {
@@ -15,12 +19,11 @@ export class ModulosController {
 
 	async save(request: Request, response: Response, next: NextFunction) {
 		request.body.usuario = request.body.usuario || request.params.usuario_id;
-
 		try {
 			await this.modulosControllerRepository.save(request.body);
-			response.status(200).json({status: true, message: 'Usuário criado com sucesso!'})
+			response.status(200).json({status: true, message: 'Módulo criado com sucesso!'})
 		} catch (error) {
-			response.status(500).json({status: false, message: 'Falha ao criar usuário!'})
+			response.status(500).json({status: false, message: 'Falha ao criar módulo!'})
 		}
 	}
 
@@ -30,14 +33,14 @@ export class ModulosController {
 				request.params.id
 			);
 			request.body.id = modulo.id;
-
-			return response.status(200).json({
+			await this.modulosControllerRepository.save(request.body)	
+			response.status(200).json({
 				status: true,
-				modulos: await this.modulosControllerRepository.save(request.body),
+				message:'Módulo atualizado com sucesso!'
 			});
 		} catch (err) {
 			console.log(err);
-			return response
+			response
 				.status(500)
 				.json({ status: false, message: 'Erro ao atualizar' });
 		}

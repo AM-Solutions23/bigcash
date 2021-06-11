@@ -1,7 +1,9 @@
 import firebase from 'firebase';
 import { getRepository } from 'typeorm';
 import { Usuario } from './../modules/Usuario/Entities/Usuario';
+import { UsuarioPerfis } from './../modules/Usuario/Entities/UsuarioPerfis';
 import * as jwt from 'jsonwebtoken';
+import {PermissaoController} from './../modules/Permissao/Controllers/PermissaoController';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyDXIuUCb8gcIQYJV2dv-eQT6rwNAHMQ6dE',
@@ -25,11 +27,18 @@ export const prepareLoginOrCreate = async (token_id, profile_id) => {
 		const user_data = {
 			email: login_resp.additionalUserInfo.profile['email'],
 			nome: login_resp.additionalUserInfo.profile['name'],
+			foto: login_resp.additionalUserInfo.profile['picture'],
 			provider: login_resp.additionalUserInfo.providerId,
 		};
 		return await handleFirebaseDataToDB(user_data);
 	} else {
-		return { status: true, message: 'usuário já está logado!' };
+		const user_data = {
+			email: firebaseUser.providerData[0].email,
+			nome: firebaseUser.providerData[0].displayName,
+			foto: firebaseUser.providerData[0].photoURL,
+			provider: firebaseUser.providerData[0].providerId
+		};
+		return await handleFirebaseDataToDB(user_data);
 	}
 };
 export const loginOrCreate = async (credential) => {
@@ -59,16 +68,23 @@ export const getUser = () => {
 const handleFirebaseDataToDB = async (user_data) => {
 	const usuario = new Usuario();
 	const usuario_repo = getRepository(Usuario);
-	usuario.nome = user_data.nome;
-	usuario.email = user_data.email;
-	usuario.provider = user_data.provider;
-	usuario.permissao = 1;
+	const usuario_perfis_repo = getRepository(UsuarioPerfis);
+	Object.assign(usuario, user_data);
+	usuario.permissao = 5;
 	const check_user = await usuario_repo.findOne({ email: usuario.email });
-	if (check_user) {
-		return jwt.sign({ id: check_user['id'] }, 'aemcli2021_ts_schema@');
+	if (check_user && check_user.cpf_cnpj) {
+		const permissoes = await new PermissaoController().actions({
+			permissao: 5,
+		});
+		return {status: true, token_: jwt.sign(
+			{ id: usuario.id, permissoes: permissoes },
+			'aemcli2021_ts_schema@'
+		)};
 	} else {
-		const new_user = await usuario_repo.save(usuario);
-		return jwt.sign({ id: new_user['id'] }, 'aemcli2021_ts_schema@');
+		const new_user = check_user || await usuario_repo.save(usuario);
+		const perfil_user = {usuario: new_user.id, perfil: 1}
+		!check_user && await usuario_perfis_repo.save(Object.assign(new UsuarioPerfis(), perfil_user))
+		return {status: false, message:'Novo usuário, complete o cadastro', usuario_id: new_user.id}
 	}
 };
 

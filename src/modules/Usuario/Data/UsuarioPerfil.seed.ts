@@ -5,20 +5,13 @@ export default (function () {
 	createConnection().then(connec => {
 		const usuarioPerfilData = [
 			{
-				id: 1,
 				perfil: 1,
-				usuario: 6,
+				usuario: 1,
 			},
 			{
-				id: 2,
 				perfil: 2,
-				usuario: 7,
-			},
-			{
-				id: 3,
-				perfil: 3,
-				usuario: 8,
-			},
+				usuario: 1,
+			}
 		];
 
 		const usuarioPerfil = connec.getRepository(UsuarioPerfis);
