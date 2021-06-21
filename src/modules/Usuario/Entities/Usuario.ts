@@ -22,7 +22,7 @@ export class Usuario {
 	@Column({ default: null })
 	provider: string;
 
-	@Column({ default: null })
+	@Column({ default: null, unique: true })
 	telefone: string;
 
 	@Column({ default: null })
@@ -39,6 +39,9 @@ export class Usuario {
 
 	@Column({default: 1})
 	ativo: number;
+
+	@Column({nullable: true, type:'longtext'})
+	token_session: string;
 
 	@Column()
 	permissao: number;

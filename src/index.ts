@@ -10,52 +10,37 @@ createConnection().then(connection => {
 	const app = express();
 	app.use(bodyParser.json());
 	app.use(express.urlencoded({ extended: true }));
-	// register express routes from defined application routes
 	Routes.forEach(route => {
 		(app as any)[route.method](
 			route.route,
 			route['middleware'](route.action_key),
-			(req: Request, res: Response, next: Function) => {
+			async (req: Request, res: Response, next: Function) => {
+				res.logandjson = (json_, extra_params = {}) => {
+					LogService.createLOG({
+						action_key: route.action_key,
+						usuario: extra_params['id'] ||req.params.usuario_id || null,
+						tipo: '',
+						user_ip: req.headers.user_ip || null,
+						user_coordenadas:req.headers.user_coordenadas|| null,
+						user_device: req.headers.user_device || null,
+						module: route.module,
+						status:'1',
+						message: json_.message instanceof Object ? JSON.stringify(json_.message) : json_.message
+					});
+					res.json(json_);
+				}
 				const result = new (route.controller as any)()[route.action](
 					req,
 					res,
 					next
 				);
 				if (result instanceof Promise) {
-					result.then(result =>{
-						if(result !== null && result !== undefined){
-							const log = {
-								action_key: route.action_key,
-								usuario: req.params.usuario_id,
-								tipo: '',
-								user_ip: req.body.user_ip,
-								user_coordenadas:req.headers.user_coordenadas,
-								user_device: req.headers.user_device,
-								module: route.module,
-								status: true,
-								erro: null
-							}
-							// LogService.createLOG(log);
-							result
-						}
+					result.then(result => {
+						result !== null && result !== undefined && result;
 					});
-				} else if (result !== null && result !== undefined) {
-					const log = {
-						action_key: route.action_key,
-						usuario: req.params.usuario_id,
-						tipo: '',
-						user_ip: req.headers.user_ip,
-						user_coordenadas:req.headers.user_coordenadas,
-						user_device: req.headers.user_device,
-						module: route.module,
-						status: false,
-						erro: result
-					}
-					// LogService.createLOG(log);
-					result
-				}
+				} else if (result !== null && result !== undefined) result
 			}
 		);
 	});
-	app.listen(3001, () => console.log(`Server started on port 3000`));
+	app.listen(3001, () => console.log(`Server started on port 3001`));
 });

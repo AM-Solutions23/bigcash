@@ -2,7 +2,6 @@ import { getRepository } from 'typeorm';
 import { NextFunction, Request, Response } from 'express';
 import { Usuario } from '../Entities/Usuario';
 import { UsuarioPerfis } from '../Entities/UsuarioPerfis';
-import { hash } from 'bcrypt';
 
 export class UsuarioController {
 	private usuarioControllerRepository = getRepository(Usuario);
@@ -10,7 +9,7 @@ export class UsuarioController {
 
 	async all(request: Request, response: Response, next: NextFunction) {
 		try {
-			response.status(200).json({
+			response.status(200).logandjson({
 				status: true,
 				message: 'Usuários listados com sucesso!',
 				usuarios: await this.usuarioControllerRepository.find(),
@@ -18,7 +17,7 @@ export class UsuarioController {
 		} catch (error) {
 			response
 				.status(500)
-				.json({ status: false, message: 'Falha ao listar usuários' });
+				.logandjson({ status: false, message: 'Falha ao listar usuários' });
 		}
 	}
 
@@ -33,7 +32,7 @@ export class UsuarioController {
 				if (!(await this.one({ id: request.body.credenciado })))
 					return response
 						.status(500)
-						.json({ status: false, message: 'Credenciado não encontrado' });
+						.logandjson({ status: false, message: 'Credenciado não encontrado' });
 				const user = await this.usuarioControllerRepository.save(request.body);
 
 				if (request.body.perfil) {
@@ -44,15 +43,15 @@ export class UsuarioController {
 				}
 				response
 					.status(200)
-					.json({ status: true, message: 'Usuário criado com sucesso!' });
+					.logandjson({ status: true, message: 'Usuário criado com sucesso!' });
 			} else {
 				const field_ = check_['login'] ? 'Login' : 'CPF/CNPJ';
 				response
 					.status(500)
-					.json({ status: false, message: `${field_} já cadastrado!` });
+					.logandjson({ status: false, message: `Telefone já cadastrado!` });
 			}
 		} catch (error) {
-			response.status(500).json({ status: false, message: error });
+			response.status(500).logandjson({ status: false, message: 'Falha ao cadastrar cadastrado!' });
 		}
 	}
 
@@ -61,21 +60,27 @@ export class UsuarioController {
 			const usuario = await this.usuarioControllerRepository.findOneOrFail(
 				request.params.id
 			);
+			if (!usuario) return response.status(404).logandjson({status:true, message:'Usuário não encontrado!'})
 			request.body.id = usuario.id;
-			if (request.body.senha !== undefined) {
-				request.body.senha = await hash(request.body.senha, 10);
+			
+			await this.usuarioControllerRepository.save(Object.assign(new Usuario(),request.body));
+			if (request.body.perfil) {
+				const perfils = await this.usuarioPerfisControllerRepository.find({
+					where: { usuario: usuario.id }
+				});
+				await this.usuarioPerfisControllerRepository.remove(perfils);
+				request.body.perfil.forEach(perfil => {
+					this.usuarioPerfisControllerRepository.save(Object.assign(new UsuarioPerfis(), {usuario: usuario.id, perfil}))
+				});
 			}
-			await this.usuarioControllerRepository.save(request.body);
-
-			return response.status(200).json({
+			return response.status(200).logandjson({
 				status: true,
 				message: 'Usuário atualizado com sucesso',
 			});
 		} catch (err) {
-			console.log(err);
 			return response
 				.status(500)
-				.json({ status: false, message: 'Erro ao atualizar' });
+				.logandjson({ status: false, message: 'Erro ao atualizar' });
 		}
 	}
 
@@ -89,19 +94,20 @@ export class UsuarioController {
 		return await this.usuarioControllerRepository
 			.createQueryBuilder('usuario')
 			.where(
-				`usuario.cpf_cnpj = "${params['cpf_cnpj']}" OR usuario.login = "${params['login']}"`
+				`usuario.telefone = "${params['telefone']}"`
 			)
 			.getOne();
 	}
 
 	async getPerfils(usuario) {
-		try {
-			return await this.usuarioPerfisControllerRepository.find({
-				where: [{ usuario }],
-				select: ['perfil'],
-			});
-		} catch (error) {
-			return [false];
-		}
-	}
+		let perfis = []
+		const perfis_ = await this.usuarioPerfisControllerRepository.find({
+			where: [{ usuario }],
+			select: ['perfil'],
+		});
+		perfis_.forEach(perfil => {
+			perfis.push(perfil.perfil);
+		})
+		return perfis;
+	} 
 }

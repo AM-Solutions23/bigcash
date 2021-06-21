@@ -7,11 +7,6 @@ import {
 	Index,
 } from "typeorm";
 
-export enum LogType {
-	LOGIN = "login",
-	LOGOUT = "logout",
-	ACTION = "action",
-}
 
 @Entity()
 export class Log {
@@ -19,19 +14,16 @@ export class Log {
 	id: number;
 
 	@Index()
-	@Column()
+	@Column({nullable:true})
 	usuario: number;
 
-	@Column({ type: "enum", enum: LogType, default: LogType.LOGIN })
-	tipo: LogType;
-
-    @Column()
+    @Column({nullable:true})
 	user_ip: string;
 
-    @Column()
+    @Column({nullable:true})
 	user_coordenadas: string;
 
-    @Column()
+    @Column({nullable:true})
 	user_device: string;
 
     @Column()
@@ -43,8 +35,8 @@ export class Log {
 	@Column()
 	status: boolean;
 
-	@Column()
-	erro: string;
+	@Column({nullable:true, type:'longtext'})
+	message: string;
 
 	@CreateDateColumn({
 		type: "timestamp",

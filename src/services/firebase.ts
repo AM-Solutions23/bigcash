@@ -76,15 +76,18 @@ const handleFirebaseDataToDB = async (user_data) => {
 		const permissoes = await new PermissaoController().actions({
 			permissao: 5,
 		});
-		return {status: true, token_: jwt.sign(
-			{ id: usuario.id, permissoes: permissoes },
+		const token_ = jwt.sign(
+			{ id: check_user.id, permissoes: permissoes },
 			'aemcli2021_ts_schema@'
-		)};
+		);
+		check_user.token_session = token_;
+		usuario_repo.save(check_user);
+		return {response: {status: true, token_}, extra_params: {id: check_user.id}};
 	} else {
 		const new_user = check_user || await usuario_repo.save(usuario);
 		const perfil_user = {usuario: new_user.id, perfil: 1}
 		!check_user && await usuario_perfis_repo.save(Object.assign(new UsuarioPerfis(), perfil_user))
-		return {status: false, message:'Novo usuário, complete o cadastro', usuario_id: new_user.id}
+		return {response: { status: false, message: 'Novo usuário, complete o cadastro', usuario_id: new_user.id }, extra_params: {id: new_user.id}};
 	}
 };
 

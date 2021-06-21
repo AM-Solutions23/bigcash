@@ -5,6 +5,7 @@ export const Routes = [{
     route: "/auth/login",
     controller: AuthController,
     action: "login",
+    action_key: "login_auth",
     module: 'Auth'
 },{
     method: "post",

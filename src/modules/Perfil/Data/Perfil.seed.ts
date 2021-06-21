@@ -5,14 +5,17 @@ export default (function () {
 	createConnection().then(connec => {
 		const perfilData = [
 			{
+				id:1,
 				nome: 'Empreendedor',
 				status: true,
 			},
 			{
+				id:2,
 				nome: 'Credenciado',
 				status: true,
 			},
 			{
+				id:3,
 				nome: 'Parceiro',
 				status: true,
 			},
