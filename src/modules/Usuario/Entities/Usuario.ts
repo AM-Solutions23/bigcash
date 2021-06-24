@@ -31,6 +31,9 @@ export class Usuario {
 	@Column({ default: null })
 	credenciado: number;
 
+	@Column('simple-array',{nullable: true})
+	patrocinados: number[];
+
 	@Column({ unique: true, nullable: true })
 	cpf_cnpj: string;
 
