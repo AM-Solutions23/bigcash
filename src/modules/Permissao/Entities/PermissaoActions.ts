@@ -4,7 +4,11 @@ import {
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
+	ManyToOne,
+	JoinColumn,
 } from 'typeorm';
+import { Actions } from './Actions';
+import { Permissao } from './Permissao';
 
 @Entity()
 export class PermissaoActions {
@@ -12,10 +16,10 @@ export class PermissaoActions {
 	id: number;
 
 	@Column()
-	permissao: number;
+	permissaoId: number;
 
 	@Column()
-	action: string;
+	actionId: number;
 
 	@CreateDateColumn({
 		type: 'timestamp',

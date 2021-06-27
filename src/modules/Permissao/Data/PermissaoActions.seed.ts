@@ -1,17 +1,21 @@
 import { PermissaoActions } from '../Entities/PermissaoActions';
 import { createConnection } from 'typeorm';
-import Routes from './../../../routes';
+import { Actions }  from '../Entities/Actions';
+import { isNumber } from 'util';
 
 export default (function () {
 	const permissoes = [1, 2, 3, 4, 5];
 	let permissaoActionsData = [];
 	createConnection().then(connec => {
+        const idActions = connec.getRepository(Actions)
+        .find()
+		
 		permissoes.forEach(permissao => {
-			Routes.forEach(route => {
-				route.action_key &&
+			idActions.forEach (action => {
+				action.action_key &&
 					permissaoActionsData.push({
 						permissao: permissao,
-						action: route.action_key,
+						actionId: idActions
 					});
 			});
 		});

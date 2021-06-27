@@ -4,7 +4,9 @@ import {
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
+	OneToMany,
 } from 'typeorm';
+import { PermissaoActions } from './PermissaoActions';
 
 @Entity()
 export class Permissao {

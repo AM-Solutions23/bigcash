@@ -1,4 +1,4 @@
-import { ConnectionOptionsReader, getRepository } from "typeorm";
+import { ConnectionOptionsReader, getRepository, In } from "typeorm";
 import { NextFunction, Request, Response } from "express";
 import { Usuario } from "../Entities/Usuario";
 import { UsuarioPerfis } from "../Entities/UsuarioPerfis";
@@ -32,12 +32,10 @@ export class UsuarioController {
       const check_ = await this.checkBeforeInsert(request.body);
       if (!check_) {
         if (!(await this.one({ id: request.body.credenciado })))
-          return response
-            .status(500)
-            .logandjson({
-              status: false,
-              message: "Credenciado não encontrado",
-            });
+          return response.status(500).logandjson({
+            status: false,
+            message: "Credenciado não encontrado",
+          });
         const user = await this.usuarioControllerRepository.save(request.body);
 
         if (request.body.perfil) {
@@ -56,12 +54,10 @@ export class UsuarioController {
           .logandjson({ status: false, message: `Telefone já cadastrado!` });
       }
     } catch (error) {
-      response
-        .status(500)
-        .logandjson({
-          status: false,
-          message: "Falha ao cadastrar cadastrado!",
-        });
+      response.status(500).logandjson({
+        status: false,
+        message: "Falha ao cadastrar cadastrado!",
+      });
     }
   }
 
@@ -95,9 +91,7 @@ export class UsuarioController {
         message: "Usuário atualizado com sucesso",
       });
     } catch (err) {
-      return response
-        .status(500)
-        .logandjson({ status: false, message: err });
+      return response.status(500).logandjson({ status: false, message: err });
     }
   }
 
@@ -132,64 +126,87 @@ export class UsuarioController {
             { id: userToLogin.id }
           );
         }
-      } else response
-	  .status(400)
-	  .logandjson({ status: false, message: 'Usuario não encontrado' });
+      } else
+        response
+          .status(400)
+          .logandjson({ status: false, message: "Usuario não encontrado" });
     } catch (err) {
-		return response
-		.status(500)
-		.logandjson({ status: false, message: err });
-	}
+      return response.status(500).logandjson({ status: false, message: err });
+    }
   }
 
-  async getSponsor(request: Request, response: Response, next: NextFunction){
+  async getSponsor(request: Request, response: Response, next: NextFunction) {
     try {
       if (request.params.login) {
         const login = await this.usuarioControllerRepository.findOne({
           where: { login: request.params.login },
         });
         const Patrocinador = await this.usuarioControllerRepository.findOne({
-          where: { id: login.patrocinador }
-        })
-        return response.status(200).logandjson(
-          {
-            status: true,
-            message: Patrocinador,
-          }
-        );
-      } else response
-	  .status(400)
-	  .logandjson({ status: false, message: 'Usuario não encontrado' });
+          where: { id: login.patrocinador },
+        });
+        return response.status(200).logandjson({
+          status: true,
+          message: Patrocinador,
+        });
+      } else
+        response
+          .status(400)
+          .logandjson({ status: false, message: "Usuario não encontrado" });
     } catch (err) {
-		return response
-		.status(500)
-		.logandjson({ status: false, message: await err });
-	}
+      return response
+        .status(500)
+        .logandjson({ status: false, message: await err });
+    }
   }
 
-  async getDownlines(request: Request, response: Response, next: NextFunction){
+  async getDirect(request: Request, response: Response, next: NextFunction) {
     try {
       if (request.params.login) {
         const login = await this.usuarioControllerRepository.findOne({
           where: { login: request.params.login },
         });
         const patrocinados = await this.usuarioControllerRepository.find({
-          where: { id: login.patrocinados }
-        })
-        return response.status(200).logandjson(
-          {
-            status: true,
-            message: patrocinados,
-          }
-        );
-      } else response
-	  .status(400)
-	  .logandjson({ status: false, message: 'Usuario não encontrado' });
+          where: { id: In(login.patrocinados) },
+        });
+        return response.status(200).logandjson({
+          status: true,
+          message: patrocinados,
+        });
+      } else
+        response
+          .status(400)
+          .logandjson({ status: false, message: "Usuario não encontrado" });
     } catch (err) {
-		return response
-		.status(500)
-		.logandjson({ status: false, message: await err });
-	}
+      return response.status(500).logandjson({ status: false, message: err });
+    }
+  }
+
+  async getIndirect(request: Request, response: Response, next: NextFunction) {
+    try {
+      if (request.params.login) {
+        const login = await this.usuarioControllerRepository.findOne({
+          where: { login: request.params.login },
+        });
+        const diretos = await this.usuarioControllerRepository.find({
+          where: { id: In(login.patrocinados) },
+        });
+        
+        const indiretos = await this.usuarioControllerRepository.find({
+          where: { id: In(diretos[0].patrocinados)}
+        });
+
+        return response.status(200).logandjson({
+          status: true,
+          message: indiretos,
+        });
+      } else
+        response
+          .status(400)
+          .logandjson({ status: false, message: "Usuario não encontrado" });
+    } catch (err) {
+      console.log(err);
+      return response.status(500).logandjson({ status: false, message: err });
+    }
   }
 
   async checkBeforeInsert(params) {
