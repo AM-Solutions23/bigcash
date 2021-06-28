@@ -208,7 +208,6 @@ export class UsuarioController {
           .status(400)
           .logandjson({ status: false, message: "Usuario não encontrado" });
     } catch (err) {
-      console.log(err);
       return response.status(500).logandjson({ status: false, message: err });
     }
   }
@@ -216,36 +215,53 @@ export class UsuarioController {
   async getUplines(request: Request, response: Response, next: NextFunction) {
     try {
       if (request.params.login) {
-
+        let uplines = [];
         const login = await this.usuarioControllerRepository.findOne({
           where: { login: request.params.login },
         });
-        let uplines = await this.usuarioControllerRepository.find({
+        let sponsor = await this.usuarioControllerRepository.find({
           where: { id: login.patrocinador },
         });
-      
-
-        for (var i = 0; i < 3; i++) {
-        /*   uplines.push(
-            await this.usuarioControllerRepository.find({
-              where: { id: uplines },
-            })
-          ); */
+        uplines.push(sponsor);
+        ///ALTERAR NUMERO DE REPETICOES COM BASE NO PLANO
+        for (let i = 0; i < 3; i++) {
+          sponsor = await this.usuarioControllerRepository.find({
+            where: { id: sponsor[0].patrocinador },
+          });
+          uplines.push(sponsor);
         }
-
-        
         return response.status(200).logandjson({
           status: true,
-          message: typeof uplines,
+          message: uplines,
         });
-
-
       } else
         response
           .status(400)
           .logandjson({ status: false, message: "Usuario não encontrado" });
     } catch (err) {
-      console.log(err);
+      return response.status(500).logandjson({ status: false, message: err });
+    }
+  }
+
+  async getDownlines(request: Request, response: Response, next: NextFunction) {
+    try {
+      if (request.params.login) {
+        let downlines = [];
+        let login = await this.usuarioControllerRepository.findOne({
+          where: { login: request.params.login },
+        });
+        if (login.patrocinados) {
+          downlines.push(login.patrocinados);
+        }
+        return response.status(200).logandjson({
+          status: true,
+          message: downlines
+        });
+      } else
+        response
+          .status(400)
+          .logandjson({ status: false, message: "Usuario não encontrado" });
+    } catch (err) {
       return response.status(500).logandjson({ status: false, message: err });
     }
   }

@@ -12,7 +12,6 @@ export default (function () {
           action: route.action_key,
         });
     });
-
     const actionsControllerRepository = connec.getRepository(Actions);
 	
     actionsData.forEach(async (data) => {
