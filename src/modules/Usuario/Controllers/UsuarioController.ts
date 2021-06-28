@@ -141,12 +141,12 @@ export class UsuarioController {
         const login = await this.usuarioControllerRepository.findOne({
           where: { login: request.params.login },
         });
-        const Patrocinador = await this.usuarioControllerRepository.findOne({
+        const patrocinador = await this.usuarioControllerRepository.findOne({
           where: { id: login.patrocinador },
         });
         return response.status(200).logandjson({
           status: true,
-          message: Patrocinador,
+          message: patrocinador,
         });
       } else
         response
@@ -182,6 +182,7 @@ export class UsuarioController {
   }
 
   async getIndirect(request: Request, response: Response, next: NextFunction) {
+    ///////////////// AUMENTAR A QUANTIDADE DE REPETICOES
     try {
       if (request.params.login) {
         const login = await this.usuarioControllerRepository.findOne({
@@ -190,15 +191,55 @@ export class UsuarioController {
         const diretos = await this.usuarioControllerRepository.find({
           where: { id: In(login.patrocinados) },
         });
-        
-        const indiretos = await this.usuarioControllerRepository.find({
-          where: { id: In(diretos[0].patrocinados)}
-        });
-
+        let indiretos = [];
+        for (var prop in diretos) {
+          indiretos.push(
+            await this.usuarioControllerRepository.find({
+              where: { id: In(diretos[prop].patrocinados) },
+            })
+          );
+        }
         return response.status(200).logandjson({
           status: true,
           message: indiretos,
         });
+      } else
+        response
+          .status(400)
+          .logandjson({ status: false, message: "Usuario não encontrado" });
+    } catch (err) {
+      console.log(err);
+      return response.status(500).logandjson({ status: false, message: err });
+    }
+  }
+
+  async getUplines(request: Request, response: Response, next: NextFunction) {
+    try {
+      if (request.params.login) {
+
+        const login = await this.usuarioControllerRepository.findOne({
+          where: { login: request.params.login },
+        });
+        let uplines = await this.usuarioControllerRepository.find({
+          where: { id: login.patrocinador },
+        });
+      
+
+        for (var i = 0; i < 3; i++) {
+        /*   uplines.push(
+            await this.usuarioControllerRepository.find({
+              where: { id: uplines },
+            })
+          ); */
+        }
+
+        
+        return response.status(200).logandjson({
+          status: true,
+          message: typeof uplines,
+        });
+
+
       } else
         response
           .status(400)

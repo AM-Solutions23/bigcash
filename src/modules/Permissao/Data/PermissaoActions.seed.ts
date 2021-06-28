@@ -5,25 +5,21 @@ import { isNumber } from 'util';
 
 export default (function () {
 	const permissoes = [1, 2, 3, 4, 5];
-	let permissaoActionsData = [];
-	createConnection().then(connec => {
-        const idActions = connec.getRepository(Actions)
-        .find()
-		
-		permissoes.forEach(permissao => {
-			idActions.forEach (action => {
-				action.action_key &&
-					permissaoActionsData.push({
-						permissao: permissao,
-						actionId: idActions
-					});
-			});
-		});
-		const permissaoActions = connec.getRepository(PermissaoActions);
-
-		permissaoActionsData.forEach(async data => {
-			await permissaoActions.save(data);
-		});
+	let actionsData = [];
+	createConnection().then((connec) => {
+	  Actions.forEach((action) => {
+		action.id &&
+		  actionsData.push({
+			actionId: action.id,
+			permissaoId: permissoes
+		  });
+	  });
+  
+	  const actionsControllerRepository = connec.getRepository(PermissaoActions);
+	  
+	  actionsData.forEach(async (data) => {
+		await actionsControllerRepository.save(data);
+	  });
 	});
 	return true;
-})();
+  })();

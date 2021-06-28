@@ -2,6 +2,7 @@ import { Actions } from "../Entities/Actions";
 import { createConnection } from "typeorm";
 import Routes from "../../../routes";
 
+
 export default (function () {
   let actionsData = [];
   createConnection().then((connec) => {

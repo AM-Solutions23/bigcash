@@ -81,5 +81,23 @@ export const Routes = [
 		action: 'getIndirect',
 		action_key: 'getIndirect_usuarios',
 		module: 'Usuario',
+	},
+	{
+		method: 'get',
+		route: '/usuarios/:login/uplines',
+		controller: UsuarioController,
+		//middleware: auth,
+		action: 'getUplines',
+		action_key: 'getUplines_usuarios',
+		module: 'Usuario',
+	},
+	{
+		method: 'get',
+		route: '/usuarios/:login/downlines',
+		controller: UsuarioController,
+		//middleware: auth,
+		action: 'getDownlines',
+		action_key: 'getDownlines_usuarios',
+		module: 'Usuario',
 	}
 ];

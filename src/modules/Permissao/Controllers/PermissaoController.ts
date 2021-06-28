@@ -1,12 +1,12 @@
 import { getRepository } from 'typeorm';
 import { NextFunction, Request, Response } from 'express';
 import { Permissao } from '../Entities/Permissao';
-import { PermissaoActions } from '../Entities/PermissaoActions';
+import { Actions } from '../Entities/Actions';
 
 export class PermissaoController {
 	private permissaoControllerRepository = getRepository(Permissao);
-	private PermissaoActionscontrollerRepository =
-		getRepository(PermissaoActions);
+	private actionscontrollerRepository =
+		getRepository(Actions);
 
 	async all(request: Request, response: Response, next: NextFunction) {
 		return this.permissaoControllerRepository.find();
@@ -48,7 +48,7 @@ export class PermissaoController {
 	}
 
 	async actions(request: Object) {
-		return this.PermissaoActionscontrollerRepository.find({
+		return this.actionscontrollerRepository.find({
 			where: [request],
 			select: ['action'],
 		});
